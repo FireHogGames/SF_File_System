@@ -4,22 +4,21 @@ class FileSystem{
 	//For getting user files and displaying them
 	public static function GetUserFiles($dir, $user_id){
 
-		chdir("user".$user_id);
+		chdir("users/user".$user_id);
 
 		$i = 0;
 
 		if ($handle = opendir($dir)) {
 
     		while (false !== ($entry = readdir($handle))) {
-
-    			$i++;
-
        			if ($entry != "." && $entry != "..") {
 
+       				$i++;
+
             		if(is_file($entry)){
-            			echo "<button name='file".$i."'>file: ".$entry."</button><br>";
+            			echo "file [id: ".$i."]: ".$entry." - ".date ("F d Y H:i.", filemtime($entry))."<br>";
             		}else if(is_dir($entry)){
-            			echo "<button name= name='file".$i."'>dir: ".$entry."</button><br>";
+            			echo "dir [id: ".$i."]: ".$entry." - ".date ("F d Y H:i.", filemtime($entry))."<br>";
             		}
         		}
     		}
@@ -106,6 +105,36 @@ class FileSystem{
 			ReadFile($filename);
 		}else{
 			echo "File does not exist!";
+		}
+	}
+
+	public static function MoveFile($filename, $newpath){
+		if(file_exists($filename)){
+			if(file_exists($newpath)){
+				rename($filename, $newpath);
+			}else{
+				echo 'Directory not found!';
+			}
+		}else{
+			echo "File not found";
+		}
+	}
+
+	public static function CopyFile($filename){
+		if(file_exists($filename)){
+			$newpath = "Copy - ".$filename;
+
+			copy($filename, $newpath);
+		}else{
+			echo "File not found";
+		}
+	}
+
+	public static function RenameFile($filename, $newname){
+		if(file_exists($filename)){
+			rename($filename, $newname);
+		}else{
+			echo "File not found";
 		}
 	}
 }
